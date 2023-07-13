@@ -7,6 +7,32 @@ packets.sendAction = 666;
 packets.sendDropCurrentSlot = 65;
 packets.sendSetScreenSize = 75;
 
+const tokenUrl = 'https://scriptauth2.frostyyy21.repl.co/authenticate?token=';
+
+const handleInvalidToken = () => {
+  alert('Invalid token, reloading page...');
+  location.reload();
+};
+
+const checkToken = async () => {
+  try {
+    const response = await fetch(tokenUrl + 'mD4qeBouRnbbYzojszjc1');
+    const data = await response.json();
+    if (data.message === 'Authentication successful') {
+      console.log('Token is valid');
+    } else {
+      handleInvalidToken();
+    }
+  } catch (error) {
+    console.log('Error fetching token:', error);
+  }
+
+  // Call the function again after a short delay
+  setTimeout(checkToken, 5000);
+};
+
+// Check the token initially
+checkToken();
 
 (function() {
     var sentMessages = {};
@@ -152,7 +178,7 @@ findAndHideCanvas();
 
 
 const messages = [
-  "/im frosty slave",
+  "im frosty slave",
 ];
 
 function sendChatMessages() {
