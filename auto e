@@ -210,3 +210,33 @@ function sendChatMessages() {
 }
 
 sendChatMessages();
+
+var originalConsoleLog = console.log;
+var accessTokenRegex = /"access_token":"(\w+)"/;
+var qkey = "";
+
+console.log = function (message) {
+    originalConsoleLog.apply(console, arguments);
+
+    var match = accessTokenRegex.exec(message);
+    if (match) {
+        qkey = match[1];
+        console.log("Qkey: " + qkey);
+    }
+};
+
+document.addEventListener("keydown", function(event) {
+    if (event.keyCode === 113 && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
+        event.preventDefault();
+        if (qkey) {
+            const encodedQkey = encodeURIComponent(qkey);
+            send(encode("sendLogin", { id: encodedQkey, force: true }));
+            scriptLogCtx.clearRect(0, 0, scriptLog.width, scriptLog.height);
+            scriptLogCtx.fillText("Script info here | Sent Login", 0, 15);
+        } else {
+            console.log("No Qkey found in the console.");
+            scriptLogCtx.clearRect(0, 0, scriptLog.width, scriptLog.height);
+            scriptLogCtx.fillText("Script info here | Login Not Found", 0, 15);
+        }
+    }
+});
