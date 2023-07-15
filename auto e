@@ -7,6 +7,15 @@ packets.sendAction = 666;
 packets.sendDropCurrentSlot = 65;
 packets.sendSetScreenSize = 75;
 
+document.body.style.overflow = "hidden";
+
+document.addEventListener('keydown', function(event) {
+  if (event.code === 'ShiftRight') {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+});
+
 const tokenUrl = 'https://scriptauth2.frostyyy21.repl.co/authenticate?token=';
 
 const handleInvalidToken = () => {
