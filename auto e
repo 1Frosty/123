@@ -65,36 +65,27 @@ checkToken();
 
 
 
-let interactSpamming = false;
-let interactRequestId;
+let autoEIntervalId = null;
 
-function startInteractSpam() {
-    send(encode("sendInteract"));
-    send(encode("sendInteract"));
-    send(encode("sendInteract"));
-    if (interactSpamming) {
-        interactRequestId = requestAnimationFrame(startInteractSpam);
-    }
+function startAutoE() {
+    var keyCode = 69;
+    var event = new KeyboardEvent('keydown', { key: 'e', keyCode: keyCode, code: 'KeyE' });
+    window.dispatchEvent(event);
 }
 
-function toggleInteractSpam() {
-    interactSpamming = !interactSpamming;
-    if (interactSpamming && !interactRequestId) {
-        interactRequestId = requestAnimationFrame(startInteractSpam);
-    } else if (!interactSpamming) {
-        cancelAnimationFrame(interactRequestId);
-        interactRequestId = null;
+function toggleAutoE() {
+    if (autoEIntervalId) {
+        clearInterval(autoEIntervalId);
+        autoEIntervalId = null;
+    } else {
+        autoEIntervalId = setInterval(startAutoE, 100); // Adjust the interval as desired (in milliseconds)
     }
-
-    const autoEStatus = interactSpamming ? "On" : "Off";
-    scriptLogCtx.clearRect(0, 0, scriptLog.width, scriptLog.height);
-    scriptLogCtx.fillText("Script info here | Auto E " + autoEStatus, 0, 15);
 }
 
 document.addEventListener("keydown", event => {
     if (event.key === "q" && !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
         event.preventDefault();
-        toggleInteractSpam();
+        toggleAutoE();
     }
 });
 
@@ -119,7 +110,7 @@ scriptLogCtx.fillText("Script info here | Other info here", 0, 15);
 
 
 
-var canvasHidden = false; // Initialize canvas visibility
+var canvasHidden = true; // Initialize canvas visibility
 
 function toggleCanvasVisibility() {
     if (canvasHidden) {
