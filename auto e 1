@@ -2,10 +2,26 @@
 //packets
 packets.sendSpawn = 101;
 packets.sendInteract = 78;
-packets.sendChat = 97;
-packets.sendChangeSlot = 66;//broken
-packets.sendDropCurrentSlot = 64;
-packets.sendAction = 1000;
+packets.sendChat = 98;
+packets.sendChangeSlot = 66;
+packets.sendAction = 666;
+packets.sendDropCurrentSlot = 65;
+packets.sendSetScreenSize = 75;
+
+window.keybinds = {
+    "Auto E": "RightClick",
+    "Chat Spam": "F9",
+    "Menu Chat": "F5",
+    "Toplist": "F4",
+    "Fast Login": "F2",
+    "Login With Qkey": "F3",
+    "Autoclicker": "F7",
+    "Force DC": "F10",
+    "Hide Script": "F1",
+    "Qkey Scan": "F6",
+    "Switch Hats": "",
+    "AutoBoom": "Z(Slots 1-6)"
+};
 
 
 
