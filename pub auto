@@ -32,7 +32,15 @@ function toggleMessageSending() {
 
 // Listen for key press to toggle message sending on/off
 document.addEventListener("keydown", (event) => {
-  if (event.key === "[][]") {
+  if (event.key === "[]") {
     toggleMessageSending();
   }
 });
+
+// Define the stop function
+function stop(type) {
+  if (type === "chat") {
+    toggleMessageSending();
+    console.log("Message sending stopped.");
+  }
+}
