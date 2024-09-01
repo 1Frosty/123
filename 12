@@ -1,1 +1,81 @@
+    const c = document.createElement("canvas");
+    const C = c.getContext("2d");
+    document.body.appendChild(c);
+    c.style.all = "unset";
+    C.font = "30px Arial";
+    c.width = 150;
+    c.height = 30;
+    c.style.zIndex = "1000000";
+    c.style.pointerEvents = "none";
+    c.style.position = "fixed";
+    c.style.bottom = "10px";
+    c.style.left = "50px";
+    C.fillStyle = "#FFFFFF";
+    C.scale(2, 2);
 
+    // AUTO E CANVAS = A
+    const a = document.createElement("canvas");
+    const A = a.getContext("2d");
+    document.body.appendChild(a);
+    a.style.all = "unset";
+    A.font = C.font;
+    a.width = c.width;
+    a.height = c.height;
+    a.style.zIndex = "1000000";
+    a.style.pointerEvents = "none";
+    a.style.position = "fixed";
+    a.style.bottom = "10px";
+    a.style.left = `${parseInt(c.style.left) + c.width + 10}px`;
+    A.fillStyle = "#FFFFFF";
+    A.scale(2, 2);
+    A.fillText("Auto E | Off", 0, 25);
+
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            const context = this;
+            const later = function () {
+                timeout = null;
+                func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // FPS Calculation
+    let FT = [];
+    let LFT = performance.now();
+    let LFU = performance.now();
+    const update = 500; // Update every 500ms for smoother display
+
+    function frosty() {
+        const now = performance.now();
+        const delta = now - LFT;
+        LFT = now;
+
+        FT.push(delta);
+
+        // removes frames older than one second
+        while (FT.length > 0 && (now - (LFU - FT.length * delta) > 1000)) {
+            FT.shift();
+        }
+
+        // get fps and change every 500ms
+        if (now - LFU >= update) {
+            if (FT.length > 0) {
+                const avgFrameTime = FT.reduce((a, b) => a + b, 0) / FT.length;
+                const fps = 1000 / avgFrameTime;
+                C.clearRect(0, 0, c.width, c.height);
+                C.fillText(`FPS: ${fps.toFixed(1)}`, 0, 15);
+            } else {
+                C.clearRect(0, 0, c.width, c.height);
+                C.fillText(`FPS: Undefined`, 0, 15);
+            }
+            LFU = now;
+        }
+
+        requestAnimationFrame(frosty);
+    }
+
+    requestAnimationFrame(frosty);
